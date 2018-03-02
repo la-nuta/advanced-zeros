@@ -1,41 +1,35 @@
 module.exports = function getZerosCount(number, base) {
 
     let arrSimpleNum = [];
-    let chekingNum;
-    let devider = base;
+    let arrCountSimpleNum = [];
 
-    for (let i = 1; i <= devider; i++) {
-        if (!(devider % i)) {
-            devider = Math.floor(devider / i);
-            chekingNum = i;
+    for (let i = 2; i <= base; i++) {
+        if (!(base % i)) {
+            base = Math.floor(base / i);
+            let check = 1;
 
-            for (let j = 1; j <= chekingNum; j++) {
-                if (!(chekingNum % j) && j !== 1) {
+            for (let j = 2; j < i; j++) {
+                if (!(i % j) && j !== i) {
+                    check = 0;
+                }
+            }
+            if (check === 1) {
+                arrSimpleNum.push(i);
+                let count = 1;
+                arrCountSimpleNum.push(count);
 
-                    if (chekingNum % 2) {
-                        chekingNum = Math.floor(chekingNum / j);
-
-                        if (!arrSimpleNum.includes(j)) {
-                            arrSimpleNum.push(j);
-                        }
-                        let k = chekingNum;
-                        for (let n = 1; n < k; n++) {
-
-                            if (!(k % n) && arrSimpleNum[arrSimpleNum.length - 1] === k) {
-                                arrSimpleNum.pop();
-                            }
-                        }
-                    }
-                    if (chekingNum === 2) {
-                        arrSimpleNum.push(j);
-                    }
+                while (!(base % i)) {
+                    base = Math.floor(base / i);
+                    arrSimpleNum.push(i);
+                    count = count + 1;
+                    arrCountSimpleNum.push(count);
                 }
             }
         }
-
     }
 
     let countArr = [];
+
 
     for (let i = 0; i < arrSimpleNum.length; i++) {
         let countNum = number;
@@ -44,11 +38,14 @@ module.exports = function getZerosCount(number, base) {
         while (countNum > 0) {
             countNum = Math.floor(countNum / arrSimpleNum[i]);
             count += countNum;
+
+        }
+        if (arrSimpleNum[i] === arrSimpleNum[i - 1]) {
+            count = Math.floor(count / arrCountSimpleNum[i]);
         }
         countArr.push(count);
     }
 
-    let result = Math.min.apply(null, countArr);
-    return result;
+    return Math.min.apply(null, countArr);
 }
 
